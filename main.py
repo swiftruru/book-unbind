@@ -14,9 +14,33 @@ import plistlib
 import shutil
 import subprocess
 import sys
+import traceback
+from datetime import datetime
 from pathlib import Path
 
 import flet as ft
+
+# Ensure the app root is on sys.path so `from src...` works in packaged builds
+# (on Windows the CWD isn't always the app root).
+_APP_ROOT = Path(__file__).parent
+if str(_APP_ROOT) not in sys.path:
+    sys.path.insert(0, str(_APP_ROOT))
+
+
+def _crash_log_path() -> Path:
+    return Path.home() / ".bookunbind" / "crash.log"
+
+
+def _write_crash_log(exc: BaseException) -> Path:
+    log = _crash_log_path()
+    log.parent.mkdir(parents=True, exist_ok=True)
+    with log.open("a", encoding="utf-8") as f:
+        f.write(f"\n===== {datetime.now().isoformat()} =====\n")
+        f.write(f"platform: {sys.platform}  python: {sys.version}\n")
+        f.write(f"executable: {sys.executable}\n")
+        f.write(f"cwd: {os.getcwd()}\n")
+        f.write("".join(traceback.format_exception(type(exc), exc, exc.__traceback__)))
+    return log
 
 PROJECT_ROOT = Path(__file__).parent
 ICON_PNG = PROJECT_ROOT / "assets" / "icon.png"
@@ -163,4 +187,9 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except BaseException as ex:
+        log = _write_crash_log(ex)
+        print(f"[main] fatal error, wrote {log}", file=sys.stderr)
+        raise
