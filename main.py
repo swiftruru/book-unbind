@@ -66,6 +66,20 @@ def _prepare_dev_runner_macos() -> None:
     if sys.platform != "darwin" or not ICON_PNG.exists():
         return
 
+    # Flet checks ./build/macos/*.app BEFORE FLET_VIEW_PATH, so a stale
+    # build from a previous `flet build` run would shadow our custom
+    # runner. Remove it if its icon is older than assets/icon.png.
+    build_macos = PROJECT_ROOT / "build" / "macos"
+    if build_macos.exists():
+        stale = True
+        for app_dir in build_macos.glob("*.app"):
+            icns = app_dir / "Contents" / "Resources" / "AppIcon.icns"
+            if icns.exists() and icns.stat().st_mtime >= ICON_PNG.stat().st_mtime:
+                stale = False
+                break
+        if stale:
+            shutil.rmtree(build_macos)
+
     default_client = Path.home() / ".flet" / "client" / FLET_RUNNER_DIRNAME
     if not default_client.exists():
         # Flet hasn't downloaded the runner yet; skip this time. On the
