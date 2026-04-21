@@ -40,6 +40,11 @@ ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 UninstallDisplayIcon={app}\{#AppExeName}
 UninstallDisplayName={#AppName} {#AppVersion}
+; Branding: setup.exe icon + wizard graphics
+SetupIconFile=..\assets\icon.ico
+WizardImageFile=wizard_image.bmp
+WizardSmallImageFile=wizard_small.bmp
+WizardImageStretch=yes
 ; Avoid the "run from a network share" failure mode entirely by forbidding
 ; install destinations on network / shared drives (e.g. C:\Mac\... on Parallels).
 ; Inno Setup can't directly detect Prl SF, but installing to %LocalAppData%
