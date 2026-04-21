@@ -61,6 +61,9 @@ jobs:
 
       - name: Build Flet app
         shell: bash
+        env:
+          PYTHONIOENCODING: utf-8
+          PYTHONUTF8: '1'
         run: |
           flet build ${{ matrix.platform }} \
             --project BookUnbind --product BookUnbind \
