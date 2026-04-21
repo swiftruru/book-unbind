@@ -111,11 +111,19 @@ jobs:
       - name: Show artifacts
         run: ls -lh dist
 
+      - name: Ensure changelog file exists for this tag
+        run: |
+          file="changelog/${{ github.ref_name }}.md"
+          if [ ! -f "$file" ]; then
+            echo "::error::Missing $file. Create it before tagging."
+            exit 1
+          fi
+
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           files: dist/*
           tag_name: ${{ github.ref_name }}
           name: BookUnbind ${{ github.ref_name }}
-          generate_release_notes: true
+          body_path: changelog/${{ github.ref_name }}.md
           fail_on_unmatched_files: true
