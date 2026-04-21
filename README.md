@@ -27,12 +27,26 @@
 Pre-built binaries are published on every tagged release. Pick your platform below:
 
 [![macOS Apple Silicon](https://img.shields.io/badge/DOWNLOAD-MACOS%20APPLE%20SILICON-000?logo=apple&logoColor=white&style=for-the-badge)](https://github.com/swiftruru/book-unbind/releases/latest/download/BookUnbind-macos.zip)
+[![Windows Installer](https://img.shields.io/badge/DOWNLOAD-WINDOWS%20INSTALLER-0078D6?logo=windows&logoColor=white&style=for-the-badge)](https://github.com/swiftruru/book-unbind/releases/latest)
 [![Windows Portable](https://img.shields.io/badge/DOWNLOAD-WINDOWS%20PORTABLE-0078D6?logo=windows&logoColor=white&style=for-the-badge)](https://github.com/swiftruru/book-unbind/releases/latest/download/BookUnbind-windows.zip)
 [![Linux Tarball](https://img.shields.io/badge/DOWNLOAD-LINUX%20TARBALL-FCC624?logo=linux&logoColor=black&style=for-the-badge)](https://github.com/swiftruru/book-unbind/releases/latest/download/BookUnbind-linux.tar.gz)
 
 👉 歷史版本請至 [Releases](https://github.com/swiftruru/book-unbind/releases)。
 
 </div>
+
+> ### ⚠️ Windows 使用者請注意
+>
+> **推薦安裝 `BookUnbind-Setup-*.exe`**（Windows Installer），會自動裝到 `%LocalAppData%\Programs\BookUnbind\`，不需要系統管理員權限，並建立開始功能表捷徑。
+>
+> 如果要用 **Portable（`BookUnbind-windows.zip`）**，解壓後**請把資料夾放到 Windows 本機磁碟**（例如 `C:\Apps\` 或 `C:\Users\<你>\Documents\`）再執行。
+>
+> **不要**從以下路徑直接跑 `BookUnbind.exe`，會出現**開啟後視窗一片空白**：
+>
+> - Parallels Desktop / VMware Fusion 共享的 Mac 資料夾（路徑以 `C:\Mac\` 或 `\\Mac\` 開頭）
+> - 任何 SMB / UNC 網路共享磁碟（`\\server\share\...`、`Z:\` 等映射的網路磁碟）
+>
+> **原因**：Flet 內嵌的 Python runtime 在虛擬檔案系統 / 網路共享上無法載入 `data\flutter_assets\app\app.zip`，導致 Flutter 殼啟動但 Python 未初始化。這是 VM 整合層的限制，不是 BookUnbind 本身的問題。
 
 ---
 
@@ -112,6 +126,7 @@ flet build macos   # 或 windows / linux
 - **純掃描型 PDF**（無文字層）全部頁面會落入「未偵測」狀態，檔名只有前綴。後續版本預計加 OCR。
 - **原生 OS 檔案拖曳**目前不支援（Flet 0.84 的 desktop 框架尚未提供 file-drop API）；以大面積卡片點擊開啟選檔器代替。
 - **加密 PDF** 需先解密才能處理。
+- **Windows：勿從 VM 共享資料夾 / 網路磁碟執行** Portable 版（詳見上方 [Download 章節的警告](#-download)）。建議改用 Installer。
 
 ## 📝 版本紀錄
 
