@@ -10,37 +10,65 @@ shared Flet runner used by other projects.
 from __future__ import annotations
 
 import os
-import plistlib
-import shutil
-import subprocess
 import sys
 import traceback
 from datetime import datetime
 from pathlib import Path
 
-import flet as ft
+
+def _log_path() -> Path:
+    return Path.home() / ".bookunbind" / "crash.log"
+
+
+def _log(msg: str) -> None:
+    """Append a line to the crash/heartbeat log; swallow any error."""
+    try:
+        log = _log_path()
+        log.parent.mkdir(parents=True, exist_ok=True)
+        with log.open("a", encoding="utf-8") as f:
+            f.write(f"[{datetime.now().isoformat()}] {msg}\n")
+    except Exception:
+        pass
+
+
+# Heartbeat as early as possible so we can tell whether main.py was reached
+# at all when the packaged app shows a blank window.
+_log(
+    f"--- boot --- platform={sys.platform} "
+    f"exe={sys.executable} cwd={os.getcwd()} "
+    f"argv={sys.argv} file={__file__}"
+)
+
+
+def _write_crash_log(exc: BaseException) -> Path:
+    log = _log_path()
+    log.parent.mkdir(parents=True, exist_ok=True)
+    with log.open("a", encoding="utf-8") as f:
+        f.write(f"\n===== CRASH {datetime.now().isoformat()} =====\n")
+        f.write(f"platform: {sys.platform}  python: {sys.version}\n")
+        f.write(f"executable: {sys.executable}\n")
+        f.write(f"cwd: {os.getcwd()}\n")
+        f.write("".join(traceback.format_exception(type(exc), exc, exc.__traceback__)))
+    return log
+
+
+try:
+    import plistlib
+    import shutil
+    import subprocess
+    _log("stdlib imports ok")
+    import flet as ft
+    _log(f"flet imported ok, version={getattr(ft, '__version__', '?')}")
+except BaseException as _imp_ex:
+    _write_crash_log(_imp_ex)
+    raise
 
 # Ensure the app root is on sys.path so `from src...` works in packaged builds
 # (on Windows the CWD isn't always the app root).
 _APP_ROOT = Path(__file__).parent
 if str(_APP_ROOT) not in sys.path:
     sys.path.insert(0, str(_APP_ROOT))
-
-
-def _crash_log_path() -> Path:
-    return Path.home() / ".bookunbind" / "crash.log"
-
-
-def _write_crash_log(exc: BaseException) -> Path:
-    log = _crash_log_path()
-    log.parent.mkdir(parents=True, exist_ok=True)
-    with log.open("a", encoding="utf-8") as f:
-        f.write(f"\n===== {datetime.now().isoformat()} =====\n")
-        f.write(f"platform: {sys.platform}  python: {sys.version}\n")
-        f.write(f"executable: {sys.executable}\n")
-        f.write(f"cwd: {os.getcwd()}\n")
-        f.write("".join(traceback.format_exception(type(exc), exc, exc.__traceback__)))
-    return log
+_log(f"sys.path[0]={sys.path[0]}")
 
 PROJECT_ROOT = Path(__file__).parent
 ICON_PNG = PROJECT_ROOT / "assets" / "icon.png"
@@ -182,8 +210,11 @@ def main() -> None:
     except Exception as ex:  # noqa: BLE001
         print(f"[main] dev icon setup skipped: {ex}", file=sys.stderr)
 
+    _log("importing src.gui.app")
     from src.gui.app import build_app
+    _log("calling ft.run(build_app)")
     ft.run(build_app)
+    _log("ft.run returned")
 
 
 if __name__ == "__main__":
