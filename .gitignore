@@ -30,6 +30,10 @@ dist/
 # Internal spec document (not for public repo)
 BookUnbind_SPEC.md
 
+# Customized Flet dev runner (rebuilt on demand by main.py)
+.flet-local/
+assets/icon.icns
+
 # Local sample books (private / large)
 local_samples/
 
