@@ -88,6 +88,24 @@ jobs:
           Write-Host "==== ${{ matrix.artifact }} contents ===="
           & "$env:ProgramFiles\7-Zip\7z.exe" l ${{ matrix.artifact }} | Out-String -Width 4096
 
+      - name: Build Windows installer (Inno Setup)
+        if: matrix.platform == 'windows'
+        shell: pwsh
+        run: |
+          # Strip the leading "v" from e.g. refs/tags/v0.2.4; fall back to 0.0.0
+          # for non-tag runs (workflow_dispatch) so the installer still builds.
+          $ref = "${{ github.ref_name }}"
+          if ($ref -match '^v(\d+\.\d+\.\d+)$') { $ver = $Matches[1] } else { $ver = "0.0.0" }
+          Write-Host "Installer version: $ver"
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          & $iscc "/DAppVersion=$ver" "installer\BookUnbind.iss"
+          Write-Host "==== dist\ contents ===="
+          Get-ChildItem dist | Format-Table -AutoSize
+          # Expose the produced installer path to later steps
+          $setup = Get-ChildItem dist\BookUnbind-Setup-*.exe | Select-Object -First 1
+          "installer_path=$($setup.FullName)" | Out-File -Append -FilePath $env:GITHUB_ENV
+          "installer_name=$($setup.Name)"     | Out-File -Append -FilePath $env:GITHUB_ENV
+
       - name: Package Linux build
         if: matrix.platform == 'linux'
         run: |
@@ -98,6 +116,14 @@ jobs:
         with:
           name: ${{ matrix.artifact }}
           path: ${{ matrix.artifact }}
+          if-no-files-found: error
+
+      - name: Upload Windows installer
+        if: matrix.platform == 'windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.installer_name }}
+          path: ${{ env.installer_path }}
           if-no-files-found: error
 
   release:
