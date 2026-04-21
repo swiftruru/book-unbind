@@ -95,9 +95,30 @@ def _prepare_dev_runner_macos() -> None:
             shutil.rmtree(LOCAL_APP)
         shutil.copytree(default_app, LOCAL_APP, symlinks=True)
         shutil.copy(ICON_ICNS, local_icns)
+        # Assets.car is a compiled asset catalog that usually contains the
+        # app icon. macOS prefers it over AppIcon.icns when CFBundleIconName
+        # is set, so delete the catalog to force the OS to load our icns.
+        assets_car = LOCAL_APP / "Contents" / "Resources" / "Assets.car"
+        if assets_car.exists():
+            assets_car.unlink()
         _patch_info_plist(LOCAL_APP / "Contents" / "Info.plist")
-        # Bump mtime to bust macOS Launch Services icon cache.
-        os.utime(LOCAL_APP, None)
+        # Bump mtime on the bundle and key files so macOS re-reads them.
+        now = None
+        os.utime(LOCAL_APP, now)
+        os.utime(local_icns, now)
+        os.utime(LOCAL_APP / "Contents" / "Info.plist", now)
+        # Force Launch Services to re-register the bundle so the icon
+        # cache is rebuilt (otherwise a stale icon can persist).
+        lsregister = (
+            "/System/Library/Frameworks/CoreServices.framework/Frameworks/"
+            "LaunchServices.framework/Support/lsregister"
+        )
+        if os.path.isfile(lsregister):
+            subprocess.run(
+                [lsregister, "-f", str(LOCAL_APP)],
+                check=False,
+                capture_output=True,
+            )
 
     os.environ["FLET_VIEW_PATH"] = str(LOCAL_RUNNER_DIR)
 
@@ -110,6 +131,9 @@ def _patch_info_plist(plist_path: Path) -> None:
     data["CFBundleShortVersionString"] = "0.1.0"
     data["CFBundleVersion"] = "1"
     data["NSHumanReadableCopyright"] = "Copyright (c) 2026 RuData. All rights reserved."
+    # Point the OS at our .icns and prevent it from looking inside Assets.car.
+    data["CFBundleIconFile"] = "AppIcon"
+    data.pop("CFBundleIconName", None)
     with plist_path.open("wb") as f:
         plistlib.dump(data, f)
 
