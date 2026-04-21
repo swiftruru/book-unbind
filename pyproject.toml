@@ -1,0 +1,19 @@
+[project]
+name = "bookunbind"
+version = "0.1.0"
+description = "Split a PDF e-book into per-page PDFs with smart filenames."
+requires-python = ">=3.10"
+dependencies = [
+    "flet>=0.84.0",
+    "pymupdf>=1.24.0",
+    "pypdf>=4.0.0",
+]
+
+[tool.flet]
+org = "dev.ruru"
+product = "BookUnbind"
+company = "RuData"
+copyright = "Copyright (c) 2026 RuData"
+
+[tool.flet.app]
+path = "."

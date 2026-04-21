@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+
+# Virtual env
+.venv/
+venv/
+env/
+
+# Build / packaging
+build/
+dist/
+*.spec
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+.claude/
+
+# Internal spec document (not for public repo)
+BookUnbind_SPEC.md
+
+# Local sample books (private / large)
+local_samples/
+
+# Test sample PDFs (keep directory via .gitkeep)
+tests/sample_pdfs/*.pdf
+!tests/sample_pdfs/.gitkeep
