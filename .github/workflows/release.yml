@@ -79,7 +79,14 @@ jobs:
         if: matrix.platform == 'windows'
         shell: pwsh
         run: |
-          Compress-Archive -Path build/windows/* -DestinationPath ${{ matrix.artifact }}
+          # Compress-Archive drops hidden files/empty dirs and mangles the
+          # Flet app bundle under data/flutter_assets/app. Use 7-Zip (which
+          # ships on windows-latest runners) to preserve the layout.
+          Write-Host "==== build/windows contents ===="
+          Get-ChildItem -Recurse build/windows | Select-Object FullName, Length | Format-Table -AutoSize | Out-String -Width 4096
+          & "$env:ProgramFiles\7-Zip\7z.exe" a -tzip -mx=5 ${{ matrix.artifact }} .\build\windows\*
+          Write-Host "==== ${{ matrix.artifact }} contents ===="
+          & "$env:ProgramFiles\7-Zip\7z.exe" l ${{ matrix.artifact }} | Out-String -Width 4096
 
       - name: Package Linux build
         if: matrix.platform == 'linux'
