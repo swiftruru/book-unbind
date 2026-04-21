@@ -46,8 +46,10 @@ UninstallDisplayName={#AppName} {#AppVersion}
 ; or Program Files by default already sidesteps it.
 
 [Languages]
+; Inno Setup 6.7 only ships a handful of official languages; ChineseTraditional
+; is community-maintained and not bundled, so we keep the installer UI in
+; English. The app itself remains zh-TW.
 Name: "english"; MessagesFile: "compiler:Default.isl"
-Name: "chinesetraditional"; MessagesFile: "compiler:Languages\ChineseTraditional.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
