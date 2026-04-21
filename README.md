@@ -1,37 +1,38 @@
+<div align="center">
+
 # 📖 BookUnbind
 
-[![Latest release](https://img.shields.io/github/v/release/swiftruru/book-unbind?label=release&logo=github&color=brightgreen)](https://github.com/swiftruru/book-unbind/releases/latest)
-[![Build status](https://img.shields.io/github/actions/workflow/status/swiftruru/book-unbind/release.yml?label=build&logo=githubactions&logoColor=white)](https://github.com/swiftruru/book-unbind/actions/workflows/release.yml)
-[![Downloads](https://img.shields.io/github/downloads/swiftruru/book-unbind/total?logo=github&color=blue)](https://github.com/swiftruru/book-unbind/releases)
-[![License: MIT](https://img.shields.io/github/license/swiftruru/book-unbind?color=blue)](LICENSE)
-[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-lightgrey?logo=apple&logoColor=white)](#-download)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Flet 0.84](https://img.shields.io/badge/flet-0.84-02569B?logo=flutter&logoColor=white)](https://flet.dev/)
+### PDF 電子書「拆裝訂」工具
 
-把 PDF 電子書「拆裝訂」成每頁獨立 PDF 的桌面工具。
-檔名同時保留 **PDF 原始頁碼**（前綴）與 **書籍自身頁碼**（後綴）：
+把整本 PDF 電子書切成每頁獨立檔案，自動辨識書籍頁碼並產生有意義的檔名。
+原生跨平台桌面應用：macOS / Windows / Linux。
 
-| 原始頁碼 | 偵測到 | 檔名 |
-|---|---|---|
-| 21 | `20` | `021_Page_20.pdf` |
-| 25 | `1-4` | `025_Page_1-4.pdf` |
-| 410 | `D-11` | `410_Page_D-11.pdf` |
-| 5 | `iii` | `005_Page_iii.pdf` |
-| 1 | —（封面） | `001.pdf` |
+[![Build](https://img.shields.io/github/actions/workflow/status/swiftruru/book-unbind/release.yml?label=build&logo=githubactions&logoColor=white&style=flat-square)](https://github.com/swiftruru/book-unbind/actions/workflows/release.yml)
+[![Release](https://img.shields.io/github/v/release/swiftruru/book-unbind?label=release&logo=github&color=orange&style=flat-square)](https://github.com/swiftruru/book-unbind/releases/latest)
+[![License](https://img.shields.io/github/license/swiftruru/book-unbind?color=blue&style=flat-square)](LICENSE)
+[![Platforms](https://img.shields.io/badge/platforms-macOS%20%7C%20Windows%20%7C%20Linux-lightgrey?style=flat-square)](#-download)
+[![Downloads](https://img.shields.io/github/downloads/swiftruru/book-unbind/total?logo=github&color=brightgreen&style=flat-square)](https://github.com/swiftruru/book-unbind/releases)
+
+[![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white&style=flat-square)](https://www.python.org/)
+[![Flet](https://img.shields.io/badge/Flet-0.84-02569B?logo=flutter&logoColor=white&style=flat-square)](https://flet.dev/)
+[![PyMuPDF](https://img.shields.io/badge/PyMuPDF-1.24-4B8BBE?style=flat-square)](https://pymupdf.readthedocs.io/)
+[![pypdf](https://img.shields.io/badge/pypdf-4.0-4B8BBE?style=flat-square)](https://pypdf.readthedocs.io/)
+
+<img src="assets/icon.png" alt="BookUnbind icon" width="180" />
 
 ---
 
-## 📥 Download
+## 📦 Download
 
-點擊對應平台下載最新版：
+Pre-built binaries are published on every tagged release. Pick your platform below:
 
-| 平台 | 直接下載 | 安裝方式 |
-|---|---|---|
-| 🍎 **macOS** (Apple Silicon) | [**BookUnbind-macos.zip**](https://github.com/swiftruru/book-unbind/releases/latest/download/BookUnbind-macos.zip) | 解壓 → 拖 `BookUnbind.app` 進 `/Applications/` → 雙擊 |
-| 🪟 **Windows** 10/11 | [**BookUnbind-windows.zip**](https://github.com/swiftruru/book-unbind/releases/latest/download/BookUnbind-windows.zip) | 解壓 → 執行 `BookUnbind.exe` |
-| 🐧 **Linux** (GTK 3) | [**BookUnbind-linux.tar.gz**](https://github.com/swiftruru/book-unbind/releases/latest/download/BookUnbind-linux.tar.gz) | `tar xzf` 後執行 `BookUnbind` |
+[![macOS Apple Silicon](https://img.shields.io/badge/DOWNLOAD-MACOS%20APPLE%20SILICON-000?logo=apple&logoColor=white&style=for-the-badge)](https://github.com/swiftruru/book-unbind/releases/latest/download/BookUnbind-macos.zip)
+[![Windows Portable](https://img.shields.io/badge/DOWNLOAD-WINDOWS%20PORTABLE-0078D6?logo=windows&logoColor=white&style=for-the-badge)](https://github.com/swiftruru/book-unbind/releases/latest/download/BookUnbind-windows.zip)
+[![Linux Tarball](https://img.shields.io/badge/DOWNLOAD-LINUX%20TARBALL-FCC624?logo=linux&logoColor=black&style=for-the-badge)](https://github.com/swiftruru/book-unbind/releases/latest/download/BookUnbind-linux.tar.gz)
 
-👉 也可到 [Releases 頁面](https://github.com/swiftruru/book-unbind/releases) 下載歷史版本。
+👉 歷史版本請至 [Releases](https://github.com/swiftruru/book-unbind/releases)。
+
+</div>
 
 ---
 
@@ -43,7 +44,18 @@
 - ⚠️ **覆寫確認**：輸出資料夾已有檔案時提示使用者
 - 🌙 **深色模式 UI**：Flet + Material Design
 - ⚡ **純原生應用**：打包後的執行檔不需要使用者安裝 Python
+- 🎨 **自訂 App 圖示**：dev 模式下也能看到自己的圖示（非預設 Flet runner 圖）
 - 🤖 **CI 三平台自動打包**：推 `v*` tag → GitHub Actions 自動編譯 macOS / Windows / Linux
+
+## 🧾 檔名規則
+
+| 原始頁碼 | 偵測到 | 檔名 |
+|---|---|---|
+| 21 | `20` | `021_Page_20.pdf` |
+| 25 | `1-4` | `025_Page_1-4.pdf` |
+| 410 | `D-11` | `410_Page_D-11.pdf` |
+| 5 | `iii` | `005_Page_iii.pdf` |
+| 1 | —（封面） | `001.pdf` |
 
 ## 🛠 使用方式
 
@@ -103,32 +115,27 @@ flet build macos   # 或 windows / linux
 
 ## 📝 版本紀錄
 
-所有版本的詳細 changelog 保留在 [`changelog/`](changelog/) 資料夾：
+每個版本的詳細 changelog 保留在 [`changelog/`](changelog/) 資料夾：
 
+- [v0.2.0](changelog/v0.2.0.md) — Custom app icon, dev-mode branding, redesigned README
 - [v0.1.0](changelog/v0.1.0.md) — Initial release
 
 ## 🧱 專案結構
 
 ```
 .
-├── main.py                    # Flet 入口
+├── main.py                    # Flet 入口（含 dev-mode icon 注入）
 ├── src/
 │   ├── page_detector.py       # 頁碼偵測
 │   ├── filename_builder.py    # 檔名組裝
 │   ├── pdf_splitter.py        # 切分流程
 │   └── gui/app.py             # Flet UI
+├── assets/icon.png            # App 圖示（2048x2048 PNG）
 ├── tests/                     # pytest 測試
 ├── changelog/                 # 每版 Changelog
 ├── .github/workflows/         # CI（三平台自動 release）
 └── pyproject.toml             # flet build 設定
 ```
-
-## 🛠 技術棧
-
-- **Python 3.10+**
-- **[Flet](https://flet.dev/) 0.84** — Python 版 Flutter GUI
-- **[PyMuPDF](https://pymupdf.readthedocs.io/)** — 文字抽取 + 座標偵測
-- **[pypdf](https://pypdf.readthedocs.io/)** — PDF 頁面切分
 
 ## 📄 授權
 
